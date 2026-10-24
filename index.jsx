@@ -1,16 +1,11 @@
 import { useState } from "react";
+import { BIRTHDAY } from "./config.js";
 import { RoomControls, useRoomView } from "./RoomView.jsx";
 import FilmStripPage from "./FilmStrip.jsx";
 import WindowPanel, { birthdayPhase, windowTitle } from "./BirthdayWindow.jsx";
 import BedNotes from "./BedNotes.jsx";
 import TvPlayer from "./TvPlayer.jsx";
 import CouchPicks from "./CouchPicks.jsx";
-
-const BIRTHDAY = {
-  name: "My Love",
-  date: "2026-10-27T00:00:00",
-  note: "I built you a whole room. Every little thing I've made for you is tucked inside the cabinet.",
-};
 
 const PAST_SITES = [
   { title: "Our first website", href: "#" },
