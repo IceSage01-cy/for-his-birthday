@@ -5,7 +5,7 @@ import { birthdayPhase } from "./BirthdayWindow.jsx";
 const DAY = 86400000;
 const STORAGE_KEY = "birthday-unlocked";
 
-// Shown in a pop-up each time he opens the site early. Edit or add to these.
+// Shown in a pop-up each time he taps "Open it" before his birthday. Edit or add to these.
 const TEASES = [
   "Someone's too excited! 😆 It's not time yet. Hang in there a little longer.",
   "Nice try! The surprise won't open for you until your birthday.",
@@ -102,7 +102,7 @@ function Countdown({ diff }) {
 export default function LockScreen({ children }) {
   const [now, setNow] = useState(Date.now());
   const [unlocked, setUnlocked] = useState(wasUnlocked);
-  const [teasing, setTeasing] = useState(true);
+  const [teasing, setTeasing] = useState(false);
   const [tries, setTries] = useState(0);
 
   useEffect(() => {
@@ -140,7 +140,7 @@ export default function LockScreen({ children }) {
                   setTeasing(true);
                 }}
               >
-                Open it anyway
+                Open it
               </button>
             </>
           ) : (
@@ -155,7 +155,7 @@ export default function LockScreen({ children }) {
         <div className="tease-bg" onClick={() => setTeasing(false)}>
           <div className="tease" role="alertdialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <div className="lock-icon" aria-hidden="true">🙈</div>
-            <p>{TEASES[tries % TEASES.length]}</p>
+            <p>{TEASES[(tries - 1) % TEASES.length]}</p>
             <button autoFocus onClick={() => setTeasing(false)}>Okay, I'll wait</button>
           </div>
         </div>
