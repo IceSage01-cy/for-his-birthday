@@ -2,23 +2,23 @@ import { useEffect, useRef, useState } from "react";
 
 // Paste photo URLs into src. An empty src shows a numbered placeholder frame.
 const PHOTOS = [
-  { src: "", caption: "Where it started" },
-  { src: "", caption: "Our first date" },
-  { src: "", caption: "Just us" },
-  { src: "", caption: "Silly faces" },
-  { src: "", caption: "A good day" },
-  { src: "", caption: "Adventures" },
-  { src: "", caption: "Cozy nights" },
-  { src: "", caption: "Still my favorite" },
-  { src: "", caption: "Road trips" },
-  { src: "", caption: "Birthday smiles" },
-  { src: "", caption: "Lazy Sundays" },
-  { src: "", caption: "Always you" },
+  { src: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/1.4.JPEG", caption: "Where we us now" },
+  { src: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/1.12.JPEG", caption: "Our first date" },
+  { src: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/1.3.JPEG", caption: "Just us" },
+  { src: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/1.10.JPEG", caption: "Silly faces" },
+  { src: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/1.6.JPEG", caption: "A good day" },
+  { src: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/1.7.JPEG", caption: "My Handsome Person" },
+  { src: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/1.9.JPEG", caption: "Cozy nights" },
+  { src: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/1.5.JPEG", caption: "Still my favorite" },
+  { src: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/1.2.JPEG", caption: "Cafe Dates" },
+  { src: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/1.8.JPEG", caption: "Birthday smiles" },
+  { src: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/1.1.JPEG", caption: "My babyy" },
+  { src: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/1.11.JPEG", caption: "Always you" },
 ];
 
 // Point src at an audio file or URL to play a song on this page. Leave it empty for no song.
 const SONG = {
-  src: "",
+  src: "https://files.catbox.moe/z5rkub.mp3",
 };
 
 const css = `

@@ -4,17 +4,23 @@ import { useEffect, useRef } from "react";
 // video: the video of the two of you. song: a background song that plays along with it.
 // When a song is set the video is muted, so the song is what he hears.
 const TV = {
-  video: "",
-  song: "",
+  video: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/ascii_photos_reel_clean.mp4",
+  song: "https://files.catbox.moe/b5uvoz.mp3",
 };
 
 const css = `
-  .tv-video { width: 100%; display: block; border-radius: 10px; background: #000; }
+  .tv-video { width: 100%; max-height: 70vh; max-height: 70dvh; object-fit: contain; display: block; border-radius: 10px; background: #000; }
   .tv-empty { aspect-ratio: 16 / 9; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: linear-gradient(135deg, #3a4f7a, #141a2b); color: #dfe8ef; text-align: center; padding: 16px; }
 `;
 
 export default function TvPlayer() {
   const song = useRef(null);
+  const video = useRef(null);
+
+  // If the song cannot load, the video gets its own sound back so he is never left with silence.
+  const songFailed = () => {
+    if (video.current) video.current.muted = false;
+  };
 
   // The song follows the video: it plays when the video plays and pauses when it pauses.
   const playSong = () => song.current?.play().catch(() => {});
@@ -27,6 +33,7 @@ export default function TvPlayer() {
       <style>{css}</style>
       {TV.video ? (
         <video
+          ref={video}
           className="tv-video"
           src={TV.video}
           controls
@@ -40,7 +47,7 @@ export default function TvPlayer() {
       ) : (
         <div className="tv-empty">Our movie night is loading up. Come back soon.</div>
       )}
-      {TV.song && <audio ref={song} src={TV.song} loop />}
+      {TV.song && <audio ref={song} src={TV.song} loop onError={songFailed} />}
     </>
   );
 }

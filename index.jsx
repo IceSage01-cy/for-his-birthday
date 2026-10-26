@@ -6,30 +6,31 @@ import WindowPanel, { birthdayPhase, windowTitle } from "./BirthdayWindow.jsx";
 import BedNotes from "./BedNotes.jsx";
 import TvPlayer from "./TvPlayer.jsx";
 import CouchPicks from "./CouchPicks.jsx";
+import LilyBouquet from "./LilyBouquet.jsx";
+import NightstandWish from "./NightstandWish.jsx";
+import RoomDecor from "./RoomDecor.jsx";
+import { HeartLayer, useHeartBurst } from "./HeartBurst.jsx";
+import { BACK, Box, D, FLOOR, H, LEFT, Plane, W, hotProps } from "./Parts.jsx";
 
 const PAST_SITES = [
-  { title: "Our first website", href: "#" },
-  { title: "Birthday of last year", href: "#" },
+  { title: "Our first website", href: "https://website-for-him.pages.dev" },
+  { title: "Heart full of I love you's", href: "https://for-jhay.pages.dev" },
+  { title: "My Light Shower", href: "https://for-him.pages.dev" },
+  { title: "But Who knows??", href: "https://my-love-jhay.pages.dev" },
 ];
 
 // Paste a photo URL into src to replace the placeholder portrait on the table.
 const PORTRAIT = {
-  src: "",
+  src: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/1.13.JPEG",
 };
 
-// Paste an image URL or file path into src to show your bouquet when the vase is tapped.
+// Tapping the vase shows the animated blue lily bouquet. Paste an image URL or file path into src
+// to show a photo under it too. Leave src empty for the lilies alone.
 const BOUQUET = {
   src: "",
   caption: "Flowers for you, because you deserve them every day.",
 };
 
-// Room sizes are percentages of the scene width (cqw), centred on the origin.
-const W = 70;
-const H = 50;
-const D = 56;
-const FLOOR = H / 2;
-const BACK = -D / 2;
-const LEFT = -W / 2;
 const GLOW = "radial-gradient(circle, rgba(255, 214, 140, 0.55), rgba(255, 214, 140, 0) 70%)";
 
 const css = `
@@ -40,7 +41,7 @@ const css = `
   .scene { position: relative; width: min(100%, 640px, max(280px, calc(100vh - 260px))); aspect-ratio: 1 / 1; container-type: inline-size; user-select: none; cursor: grab; touch-action: pan-y; -webkit-tap-highlight-color: transparent; }
   .scene:active { cursor: grabbing; }
   .room { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; }
-  .cuboid { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; }
+  .cuboid { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; transition: transform 0.35s ease; }
   .plane { position: absolute; left: 50%; top: 50%; box-sizing: border-box; }
   .side { box-shadow: inset 0 0 0 9999px rgba(0,0,0,.18); }
   .top { box-shadow: inset 0 0 0 9999px rgba(255,255,255,.12); }
@@ -48,12 +49,14 @@ const css = `
   .cuboid.hot:hover .plane, .cuboid.hot:focus-visible .plane, .plane.hot:hover { filter: brightness(1.12); }
   .cuboid:focus-visible, .plane:focus-visible { outline: none; }
   .glow { pointer-events: none; }
+  .note-button { min-height: 44px; padding: 0 18px; border: none; border-radius: 10px; background: #f7d9e3; color: #5a3a4a; font-size: 1rem; font-family: inherit; cursor: pointer; animation: note-pulse 1.6s ease-in-out infinite; }
+  @keyframes note-pulse { 50% { box-shadow: 0 0 0 6px rgba(247, 217, 227, 0.35); } }
+  @media (prefers-reduced-motion: reduce) { .note-button { animation: none; } }
   .modal-bg { position: fixed; inset: 0; background: rgba(20,12,14,.6); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 10; }
   .modal { background: #f7f7f8; border-radius: 14px; padding: 24px; max-height: 85vh; max-height: 85dvh; overflow-y: auto; max-width: 420px; width: 100%; box-sizing: border-box; box-shadow: 0 12px 40px rgba(0,0,0,.4); color: #2c2c33; }
   .modal.wide { max-width: 720px; }
   .modal h2 { margin: 0 0 12px; font-size: 1.3rem; }
-  .bouquet { width: 100%; display: block; border-radius: 10px; margin-bottom: 12px; }
-  .bouquet.placeholder { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 5rem; background: linear-gradient(#f6dfe6, #e8c4cf); }
+  .bouquet { width: 100%; display: block; border-radius: 10px; margin: 12px 0; }
   .modal p { line-height: 1.5; }
   .modal a { display: block; padding: 10px 12px; margin: 8px 0; background: #e4d6dd; border-radius: 8px; color: #5a3a4a; text-decoration: none; }
   .modal button.close { margin-top: 12px; padding: 10px 18px; min-height: 44px; border: none; border-radius: 8px; background: #5a3a4a; color: #fff; cursor: pointer; font-family: inherit; }
@@ -61,55 +64,6 @@ const css = `
     .modal { padding: 18px; }
   }
 `;
-
-function hotProps(label, onOpen) {
-  return {
-    role: "button",
-    tabIndex: 0,
-    "aria-label": label,
-    onClick: onOpen,
-    onKeyDown: (e) => {
-      if (e.key === "Enter") onOpen();
-    },
-  };
-}
-
-function Plane({ w, h, transform, className = "", style, children, ...rest }) {
-  return (
-    <div
-      className={`plane ${className}`}
-      style={{
-        width: `${w}cqw`,
-        height: `${h}cqw`,
-        marginLeft: `${-w / 2}cqw`,
-        marginTop: `${-h / 2}cqw`,
-        transform,
-        ...style,
-      }}
-      {...rest}
-    >
-      {children}
-    </div>
-  );
-}
-
-// A solid block: w is its width (x), h its height (y), d its depth (z), centred on (x, y, z).
-function Box({ x = 0, y = 0, z = 0, w, h, d, color, label, onOpen }) {
-  const faces = { background: color };
-  return (
-    <div
-      className={`cuboid${onOpen ? " hot" : ""}`}
-      style={{ transform: `translate3d(${x}cqw, ${y}cqw, ${z}cqw)` }}
-      {...(onOpen ? hotProps(label, onOpen) : {})}
-    >
-      <Plane w={w} h={h} transform={`translateZ(${d / 2}cqw)`} style={faces} />
-      <Plane w={w} h={h} className="side" transform={`rotateY(180deg) translateZ(${d / 2}cqw)`} style={faces} />
-      <Plane w={d} h={h} className="side" transform={`rotateY(-90deg) translateZ(${w / 2}cqw)`} style={faces} />
-      <Plane w={d} h={h} className="side" transform={`rotateY(90deg) translateZ(${w / 2}cqw)`} style={faces} />
-      <Plane w={w} h={d} className="top" transform={`rotateX(90deg) translateZ(${h / 2}cqw)`} style={faces} />
-    </div>
-  );
-}
 
 function Panel({ kind, onClose }) {
   const content = {
@@ -146,24 +100,21 @@ function Panel({ kind, onClose }) {
       title: "For you",
       body: (
         <>
-          {BOUQUET.src ? (
-            <img className="bouquet" src={BOUQUET.src} alt="A bouquet of flowers" />
-          ) : (
-            <div className="bouquet placeholder">💐</div>
-          )}
+          <LilyBouquet />
+          {BOUQUET.src && <img className="bouquet" src={BOUQUET.src} alt="A bouquet of flowers" />}
           <p>{BOUQUET.caption}</p>
         </>
       ),
     },
     nightstand: {
-      title: "A little note",
-      body: <p>Happy birthday, {BIRTHDAY.name}. I love you.</p>,
+      title: "A goodnight wish",
+      body: <NightstandWish />,
     },
   }[kind];
 
   return (
     <div className="modal-bg" onClick={onClose}>
-      <div className={`modal${kind === "tv" ? " wide" : ""}`} role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+      <div className={`modal${kind === "tv" || kind === "vase" ? " wide" : ""}`} role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
         <h2>{content.title}</h2>
         {content.body}
         <button className="close" onClick={onClose}>Close</button>
@@ -177,6 +128,8 @@ export default function BirthdayRoom() {
   const [open, setOpen] = useState(() => (birthdayPhase(BIRTHDAY.date) === "today" ? "window" : null));
   const [page, setPage] = useState("room");
   const [lampOn, setLampOn] = useState(true);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const { hearts, burst } = useHeartBurst();
   const view = useRoomView();
   const moved = view.moved;
 
@@ -191,6 +144,16 @@ export default function BirthdayRoom() {
 
   const toggleLamp = () => {
     if (!moved.current) setLampOn((on) => !on);
+  };
+
+  const toggleDrawer = () => {
+    if (!moved.current) setDrawerOpen((open) => !open);
+  };
+
+  // Hearts rise from the tap, or from the middle of the screen when it is a keyboard press.
+  const heartsAt = (e) => {
+    if (moved.current) return;
+    burst(e?.clientX ?? window.innerWidth / 2, e?.clientY ?? window.innerHeight / 2);
   };
 
   if (page === "filmstrip") {
@@ -231,7 +194,20 @@ export default function BirthdayRoom() {
             <Box x={LEFT + 1} y={-FLOOR - 0.5} z={0} w={2} h={1} d={D} color="#f2f2f4" />
 
             {/* Rug */}
-            <Plane w={24} h={16} transform={`translate3d(6cqw, ${FLOOR - 0.3}cqw, 14cqw) rotateX(90deg)`} style={{ background: "#c9b8c3" }} />
+            <Plane
+              w={24}
+              h={16}
+              className="hot"
+              transform={`translate3d(6cqw, ${FLOOR - 0.3}cqw, 14cqw) rotateX(90deg)`}
+              {...hotProps("Rug", heartsAt)}
+              style={{
+                background:
+                  "radial-gradient(circle at 50% 50%, #f1dfe7 0 13%, #b98a9f 14% 17%, transparent 18%), repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.22) 0 1.2cqw, transparent 1.2cqw 2.4cqw), #c9b8c3",
+                boxShadow: "inset 0 0 0 0.7cqw #8f6f82, inset 0 0 0 1.4cqw #e6d3dc, inset 0 0 0 1.9cqw #8f6f82",
+              }}
+            />
+            <Plane w={22} h={1.2} transform={`translate3d(6cqw, ${FLOOR - 0.3}cqw, 5.4cqw) rotateX(90deg)`} style={{ background: "repeating-linear-gradient(90deg, #efe3d6 0 0.5cqw, transparent 0.5cqw 1cqw)" }} />
+            <Plane w={22} h={1.2} transform={`translate3d(6cqw, ${FLOOR - 0.3}cqw, 22.6cqw) rotateX(90deg)`} style={{ background: "repeating-linear-gradient(90deg, #efe3d6 0 0.5cqw, transparent 0.5cqw 1cqw)" }} />
 
             {/* Air conditioner, TV and clock on the walls */}
             <Box x={-10} y={-19} z={BACK + 2} w={16} h={5} d={4} color="#f4f4f6" />
@@ -264,6 +240,37 @@ export default function BirthdayRoom() {
             />
             <Box x={26} y={FLOOR - 15} z={BACK + 6} w={14} h={30} d={12} color="#9c7b8a" label="Cabinet" onOpen={openPanel("cabinet")} />
 
+            {/* Cabinet doors, handles, a heart, and things on top */}
+            {[22.8, 29.2].map((x) => (
+              <Plane
+                key={x}
+                w={6}
+                h={26}
+                className="hot"
+                transform={`translate3d(${x}cqw, ${FLOOR - 15}cqw, ${BACK + 12.1}cqw)`}
+                style={{ background: "#a98897", boxShadow: "inset 0 0 0 0.5cqw #7d5f6e, inset 0 0 0 1cqw #b99aa8" }}
+                {...hotProps("Cabinet", openPanel("cabinet"))}
+              />
+            ))}
+            <Plane
+              w={3}
+              h={3}
+              className="hot"
+              transform={`translate3d(26cqw, ${FLOOR - 24}cqw, ${BACK + 12.2}cqw)`}
+              style={{ display: "flex", alignItems: "center", justifyContent: "center", color: "#f7d9e3", fontSize: "2.6cqw" }}
+              {...hotProps("Cabinet", openPanel("cabinet"))}
+            >
+              ♥
+            </Plane>
+            <Box x={25} y={FLOOR - 14} z={BACK + 12.5} w={0.6} h={4} d={0.8} color="#f7d58b" label="Cabinet" onOpen={openPanel("cabinet")} />
+            <Box x={27} y={FLOOR - 14} z={BACK + 12.5} w={0.6} h={4} d={0.8} color="#f7d58b" label="Cabinet" onOpen={openPanel("cabinet")} />
+            <Box x={26} y={FLOOR - 30.4} z={BACK + 6} w={15} h={0.8} d={13} color="#7d5f6e" label="Cabinet" onOpen={openPanel("cabinet")} />
+            <Box x={22.5} y={FLOOR - 31.6} z={BACK + 6} w={4} h={1.6} d={3} color="#6f8f6a" label="Cabinet" onOpen={openPanel("cabinet")} />
+            <Box x={22.6} y={FLOOR - 33} z={BACK + 6} w={3.6} h={1.4} d={3} color="#c4a3b0" label="Cabinet" onOpen={openPanel("cabinet")} />
+            <Box x={22.5} y={FLOOR - 34.2} z={BACK + 6} w={3.2} h={1.2} d={2.8} color="#f3d58b" label="Cabinet" onOpen={openPanel("cabinet")} />
+            <Box x={29.5} y={FLOOR - 32.05} z={BACK + 6} w={2.5} h={2.5} d={2.5} color="#d9b8a6" label="Cabinet" onOpen={openPanel("cabinet")} />
+            <Box x={29.5} y={FLOOR - 34.5} z={BACK + 6} w={3.2} h={2.4} d={3.2} color="#6f8f6a" label="Cabinet" onOpen={openPanel("cabinet")} />
+
             {/* Sofa under the TV */}
             <Box x={-2} y={FLOOR - 3} z={BACK + 8} w={30} h={6} d={12} color="#3f3f46" label="Couch" onOpen={openPanel("couch")} />
             <Box x={-2} y={FLOOR - 10} z={BACK + 3} w={30} h={8} d={4} color="#3f3f46" label="Couch" onOpen={openPanel("couch")} />
@@ -284,7 +291,6 @@ export default function BirthdayRoom() {
             <Box x={-15} y={FLOOR - 11.1} z={9.5} w={15} h={1.4} d={14} color="#c4a3b0" label="Bed" onOpen={openPanel("bed")} />
 
             {/* Nightstand and floor lamp */}
-            <Box x={-30} y={FLOOR - 5} z={-8} w={7} h={10} d={7} color="#8a8a92" label="Nightstand" onOpen={openPanel("nightstand")} />
             <Box x={-26} y={FLOOR - 16} z={-18} w={1} h={32} d={1} color="#4d4d55" label="Lamp" onOpen={toggleLamp} />
             <Box x={-26} y={FLOOR - 0.5} z={-18} w={6} h={1} d={6} color="#4d4d55" label="Lamp" onOpen={toggleLamp} />
             <Box x={-26} y={FLOOR - 32.5} z={-18} w={7.5} h={3} d={7.5} color={lampOn ? "#ffe9b0" : "#d8d4cd"} label="Lamp" onOpen={toggleLamp} />
@@ -323,10 +329,18 @@ export default function BirthdayRoom() {
               style={{ background: PORTRAIT.src ? `url(${PORTRAIT.src}) center / cover` : "linear-gradient(#f3d7c9, #c9a27e)" }}
               {...hotProps("Portrait", openPortrait)}
             />
+
+            <RoomDecor openPanel={openPanel} toggleDrawer={toggleDrawer} drawerOpen={drawerOpen} petCat={heartsAt} />
           </div>
         </div>
         <RoomControls view={view} />
+        {drawerOpen && (
+          <button className="note-button" onClick={() => setOpen("nightstand")}>
+            💌 Read the note in the drawer
+          </button>
+        )}
       </div>
+      <HeartLayer hearts={hearts} />
 
       {open && <Panel kind={open} onClose={() => setOpen(null)} />}
     </>

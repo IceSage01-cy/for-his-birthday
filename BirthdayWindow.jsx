@@ -23,7 +23,7 @@ const letter = (name) => [
   "Thank you for being the person I get to come home to, in every sense of the word. Thank you for the way you listen, for the way you make ordinary days feel like they matter, and for every time you chose patience when I was hard to love.",
   "Thank you for the laughs that leave my stomach sore, for the quiet nights where we don't have to say a thing, and for letting me see the real you: the soft parts, the tired parts, the parts you thought no one would stay for. I'm staying. Every single time.",
   "I love you without conditions. Not because of what you do, or what you give, or how the day went. I love you on your best days and on your worst ones, when you're sure of everything and when you're sure of nothing. There is no version of you I would ever trade.",
-  "You have made me braver, kinder, and more honest about what I want from this life. And what I want is more of this: more of you, more of us, more years like the ones we've had and the ones we haven't even met yet.",
+  "You have made me braver, kinder, and more honest about what I want from this life. And what I want is more of this: more of you, more of us. More of the way you make me feel like I can be my whole self, and more of the way we make each other better.",
   "I am endlessly grateful for you. For your heart, for your humor, for the way you show up. If I could, I would thank you a thousand times a day, and it still wouldn't be enough.",
   "So today, I hope you feel as loved as you truly are: completely, quietly, and without a single doubt. Eat the cake. Be celebrated. You deserve every bit of it.",
   `Happy birthday, my love. Thank you for everything. I'm always yours.`,
