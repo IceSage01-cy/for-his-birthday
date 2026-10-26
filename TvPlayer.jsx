@@ -3,9 +3,12 @@ import { useEffect, useRef } from "react";
 // Point these at your files in the project folder, or at links.
 // video: the video of the two of you. song: a background song that plays along with it.
 // When a song is set the video is muted, so the song is what he hears.
-const TV = {
+// preview: an optional smaller copy of the video for the TV screen in the room, which plays on its own.
+// Leave it empty to use the main video there too.
+export const TV = {
+  preview: "",
   video: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/ascii_photos_reel_clean.mp4",
-  song: "https://files.catbox.moe/b5uvoz.mp3",
+  song: "https://files.catbox.moe/2shsg9.mp3",
 };
 
 const css = `

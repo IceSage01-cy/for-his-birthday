@@ -5,6 +5,7 @@ import FilmStripPage from "./FilmStrip.jsx";
 import WindowPanel, { birthdayPhase, windowTitle } from "./BirthdayWindow.jsx";
 import BedNotes from "./BedNotes.jsx";
 import TvPlayer from "./TvPlayer.jsx";
+import TvScreen from "./TvScreen.jsx";
 import CouchPicks from "./CouchPicks.jsx";
 import LilyBouquet from "./LilyBouquet.jsx";
 import NightstandWish from "./NightstandWish.jsx";
@@ -49,6 +50,7 @@ const css = `
   .cuboid.hot:hover .plane, .cuboid.hot:focus-visible .plane, .plane.hot:hover { filter: brightness(1.12); }
   .cuboid:focus-visible, .plane:focus-visible { outline: none; }
   .glow { pointer-events: none; }
+  .tv-screen-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
   .note-button { min-height: 44px; padding: 0 18px; border: none; border-radius: 10px; background: #f7d9e3; color: #5a3a4a; font-size: 1rem; font-family: inherit; cursor: pointer; animation: note-pulse 1.6s ease-in-out infinite; }
   @keyframes note-pulse { 50% { box-shadow: 0 0 0 6px rgba(247, 217, 227, 0.35); } }
   @media (prefers-reduced-motion: reduce) { .note-button { animation: none; } }
@@ -221,6 +223,7 @@ export default function BirthdayRoom() {
               {...hotProps("TV", openPanel("tv"))}
             >
               ▶
+              <TvScreen paused={open === "tv"} />
             </Plane>
             <Plane
               w={8}
