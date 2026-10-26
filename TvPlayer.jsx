@@ -8,7 +8,7 @@ import { useEffect, useRef } from "react";
 export const TV = {
   preview: "",
   video: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/ascii_photos_reel_clean.mp4",
-  song: "https://files.catbox.moe/2shsg9.mp3",
+  song: "https://pub-790262e0aebb4a07bab23513f2058a1b.r2.dev/Lauv%20-%20I%20Like%20Me%20Better%20%5BOfficial%20Instrumental%5D%204.mp3",
 };
 
 const css = `
