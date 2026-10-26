@@ -13,8 +13,8 @@ import { HeartLayer, useHeartBurst } from "./HeartBurst.jsx";
 import { BACK, Box, D, FLOOR, H, LEFT, Plane, W, hotProps } from "./Parts.jsx";
 
 const PAST_SITES = [
-  { title: "Our first website", href: "https://website-for-him.pages.dev" },
-  { title: "My Light Shower", href: "https://for-jhay.pages.dev" },
+  { title: "My Light Shower", href: "https://website-for-him.pages.dev" },
+  { title: "A bouquet of flowers", href: "https://for-jhay.pages.dev" },
   { title: "Heart full of I love you's", href: "https://for-him.pages.dev" },
   { title: "But Who knows??", href: "https://my-love-jhay.pages.dev" },
 ];
